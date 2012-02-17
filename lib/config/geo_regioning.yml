@@ -1,13 +1,3 @@
-geokit_options:
-  google: 'ABQIAAAAzwMO8xjHPWjaoXGZkJXM_RTtEOivEt1HmNWV1u65m9AdwhlElBQZudAoWK8e7k5EXrnz28SU-UsSqw'
-  yahoo: false
-  geocoder_us: false
-  geocoder_ca: false
-  provider_order:
-    - :google
-  request_timeout: 3
-  units: 'miles'
-  formula: 'sphere'
 country_definitions:
   AU:
     1:
