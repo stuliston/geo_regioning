@@ -10,8 +10,8 @@ class GeoRegioning::Level < GeoRegioning::Base
 
   belongs_to :country, :class_name => 'GeoRegioning::Country'
 
-  named_scope :of_depth, lambda{ |depth| { :conditions => { :depth => depth } } }
-  named_scope :descendents_deeper_for, lambda{ |deeper,parent| 
+  scope :of_depth, lambda{ |depth| { :conditions => { :depth => depth } } }
+  scope :descendents_deeper_for, lambda{ |deeper,parent| 
     subquery = self.send(:construct_finder_sql,
       :select => "geo_regioning_levels.id",
       :conditions => {:parent_id => parent.id}
@@ -25,51 +25,51 @@ class GeoRegioning::Level < GeoRegioning::Base
     {:conditions => "geo_regioning_levels.id IN ( #{subquery} )"}
   }
   
-  named_scope :find_by_name_and_postcode, lambda{|name,postcode|
+  scope :find_by_name_and_postcode, lambda{|name,postcode|
     {
       :joins => :postcodes,
       :conditions => ['(geo_regioning_levels.long_name = ? OR geo_regioning_levels.short_name = ?) AND geo_regioning_postcodes.code = ?', name, name, postcode]
     }
   }
-  named_scope :find_by_postcode_and_name, lambda{|postcode,name|
+  scope :find_by_postcode_and_name, lambda{|postcode,name|
     {
       :joins => :postcodes,
       :conditions => ['(geo_regioning_levels.long_name = ? OR geo_regioning_levels.short_name = ?) AND geo_regioning_postcodes.code = ?', name, name, postcode]
     }
   }
   
-  named_scope :find_by_name, lambda{|name|
+  scope :find_by_name, lambda{|name|
     {
       :conditions => ['(geo_regioning_levels.long_name = ? OR geo_regioning_levels.short_name = ?)', name, name]
     }
   }
 
-  named_scope :find_by_code, lambda{|code|
+  scope :find_by_code, lambda{|code|
     {
       :conditions => ['(geo_regioning_levels.long_code = ? OR geo_regioning_levels.short_code = ?)', code, code]
     }
   }
 
-  named_scope :find_like_name, lambda{|name|
+  scope :find_like_name, lambda{|name|
     name = "#{name}%"
     {
       :conditions => ['(geo_regioning_levels.long_name LIKE ? OR geo_regioning_levels.short_name LIKE ?)', name, name]
     }
   }
    
-  named_scope :find_like_name_and_postcode, lambda{|name,postcode|
+  scope :find_like_name_and_postcode, lambda{|name,postcode|
     name = "#{name}%"
     {:joins => :postcodes,
     :conditions => ["(geo_regioning_levels.long_name LIKE ? OR geo_regioning_levels.short_name LIKE ?) AND geo_regioning_postcodes.code = ?", name, name, postcode]}
   }
   
-  named_scope :find_like_postcode_and_name, lambda{|postcode,name|
+  scope :find_like_postcode_and_name, lambda{|postcode,name|
     name = "#{name}%"
     {:joins => :postcodes,
     :conditions => ["(geo_regioning_levels.long_name LIKE ? OR geo_regioning_levels.short_name LIKE ?) AND geo_regioning_postcodes.code = ?", name, name, postcode]}
   }
   
-  named_scope :deepest, {:conditions => {:levels_count => 0}}
+  scope :deepest, {:conditions => {:levels_count => 0}}
 
   before_validation :set_country
   before_validation :set_depth
